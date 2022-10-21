@@ -46,8 +46,12 @@ bool AzureKinectDevice::Initialize(k4a_depth_mode_t DepthMode, k4a_color_resolut
 		k4a_device_configuration_t deviceConfig = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
 		deviceConfig.depth_mode = DepthMode;
 		deviceConfig.color_resolution = ColorMode;
-		deviceConfig.color_format = k4a_image_format_t::K4A_IMAGE_FORMAT_COLOR_BGRA32;
-		deviceConfig.synchronized_images_only = true;
+
+		if (ColorMode != K4A_COLOR_RESOLUTION_OFF)
+		{
+			deviceConfig.color_format = k4a_image_format_t::K4A_IMAGE_FORMAT_COLOR_BGRA32;
+			deviceConfig.synchronized_images_only = true;
+		}
 		
 		NativeKinectDevice.start_cameras(&deviceConfig);
 
@@ -203,26 +207,29 @@ void AzureKinectDevice::CaptureBodyTrackingFrame()
 			Bodies[j]->bIsTracked = false;
 		}
 
-		if (ColorTexture)
+		//렌더링 할 캡쳐 데이터는 MasterDevice에서만 추출한다.
+		if (DeviceId == 0)
 		{
-			CaptureColorImage();
-		}
+			if (ColorTexture)
+			{
+				CaptureColorImage();
+			}
 
-		if (DepthTexture)
-		{
-			CaptureDepthImage();
-		}
+			if (DepthTexture)
+			{
+				CaptureDepthImage();
+			}
 
-		if (InflaredTexture)
-		{
-			CaptureInflaredImage();
-		}
+			if (InflaredTexture)
+			{
+				CaptureInflaredImage();
+			}
 
-		if (BodyIndexTexture)
-		{
-			CaptureBodyIndexImage(bodyFrame);
+			if (BodyIndexTexture)
+			{
+				CaptureBodyIndexImage(bodyFrame);
+			}
 		}
-
 	}
 	catch (k4a::error captureError)
 	{

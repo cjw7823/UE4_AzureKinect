@@ -35,7 +35,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Azure Kinect", meta = (DisplayName = "Init Azure Kinect"))
 	static void InitDevice(int32 DeviceId = 0, EKinectDepthMode DepthMode = EKinectDepthMode::NFOV_UNBINNED,
-		EKinectColorResolution ColorMode = EKinectColorResolution::RESOLUTION_720P, EKinectRemap remap = EKinectRemap::COLOR_TO_DEPTH, int32 TimeOutInMilliSecs = 0);
+		EKinectColorResolution ColorMode = EKinectColorResolution::RESOLUTION_OFF, EKinectRemap remap = EKinectRemap::COLOR_TO_DEPTH, int32 TimeOutInMilliSecs = 0);
 
 	/** Shuts down the azure kinect device with the given device id. */
 	UFUNCTION(BlueprintCallable, Category = "Azure Kinect", meta = (DisplayName = "Shutdown Azure Kinect"))
