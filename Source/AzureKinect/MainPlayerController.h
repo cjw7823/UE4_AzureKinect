@@ -96,7 +96,7 @@ public:
 	UFUNCTION(Server, Reliable)
 		void NextCoachingVideo();
 	UFUNCTION(Server, Reliable)
-		void SetMediaPlayerRate(float rate);
+		void SetMediaPlayerRate(int32 rate);
 	UFUNCTION(Client, Reliable)
 		void SyncMediaDuration(double CurPerDu);
 	UFUNCTION(Server, Reliable)

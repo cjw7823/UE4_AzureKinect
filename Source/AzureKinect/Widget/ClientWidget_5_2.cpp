@@ -112,7 +112,7 @@ void UClientWidget_5_2::OnClick_Button_Slow()
 	{
 		is_play = !is_play;
 	}
-	MainPC->SetMediaPlayerRate(0.5f);
+	MainPC->SetMediaPlayerRate(2);
 	SetPlayButtonTexture(Texture_pause, Texture_pauseToggle);
 }
 
@@ -123,13 +123,13 @@ void UClientWidget_5_2::OnClick_Button_Play()
 
 	if (!is_play)
 	{
-		MainPC->SetMediaPlayerRate(1.0f);
+		MainPC->SetMediaPlayerRate(1);
 		SetPlayButtonTexture(Texture_pause, Texture_pauseToggle);
 		is_play = true;
 	}
 	else
 	{
-		MainPC->SetMediaPlayerRate(0.0f);
+		MainPC->SetMediaPlayerRate(0);
 		SetPlayButtonTexture(Texture_play, Texture_playToggle);
 		is_play = false;
 	}
@@ -144,7 +144,7 @@ void UClientWidget_5_2::OnClick_Button_Fast()
 	{
 		is_play = !is_play;
 	}
-	MainPC->SetMediaPlayerRate(1.5f);
+	MainPC->SetMediaPlayerRate(3);
 	SetPlayButtonTexture(Texture_pause, Texture_pauseToggle);
 }
 

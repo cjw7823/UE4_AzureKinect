@@ -505,16 +505,16 @@ void AzureKinectDevice::CaptureInflaredImage()
 				if (S[index * 2] + S[index * 2 + 1] > 0)
 				{
 					SrcData.Push(S[index * 2]);
-					SrcData.Push(S[index * 2 + 1]);
+					SrcData.Push(S[index * 2]);
 					SrcData.Push(0x00);
-					SrcData.Push(0xff);
+					SrcData.Push(S[index * 2]);
 				}
 				else
 				{
 					SrcData.Push(0x00);
 					SrcData.Push(0x00);
 					SrcData.Push(0xff);
-					SrcData.Push(0xff);
+					SrcData.Push(0x00);
 				}
 			}
 		}
@@ -557,8 +557,8 @@ void AzureKinectDevice::CaptureBodyIndexImage(const k4abt::frame& BodyFrame)
 		for (int i = 0; i < Width * Height; i++)
 		{
 			SrcData.Push(S[i] > 0 ? 0x00 : 0xff);
-			SrcData.Push(0x00);
-			SrcData.Push(0x00);
+			SrcData.Push(S[i]);
+			SrcData.Push(S[i]);
 			SrcData.Push(S[i] > 0 ? 0x00 : 0xff);
 		}
 

@@ -40,6 +40,9 @@ struct FAzureKinectJoint
 
 	UPROPERTY(BlueprintReadOnly, Category = "Azure Kinect|Body|Joints")
 		EKinectBodyJointId customIndex;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Azure Kinect|Body|Joints")
+		FQuat Quaternion;
 	
 
 	/** Ctor */
@@ -48,7 +51,8 @@ struct FAzureKinectJoint
 		Orientation(FRotator::ZeroRotator),
 		confidence(0),
 		Index(0),
-		customIndex((EKinectBodyJointId)0)
+		customIndex((EKinectBodyJointId)0),
+		Quaternion(FQuat())
 	{
 	}
 
@@ -86,7 +90,7 @@ struct FAzureKinectJoint
 			-NativeJoint.orientation.wxyz.y,
 			NativeJoint.orientation.wxyz.z,
 			NativeJoint.orientation.wxyz.w);
-
+		
 		/**
 		 * Map the Azure Kinect joint orientation to Unreal Mannequin.
 		 * @see https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints
@@ -101,6 +105,7 @@ struct FAzureKinectJoint
 		 * 
 		 * The wrist joints are a bit tricky and I couldn't get them to work correctly.
 		 */
+		Quaternion = JointQuaternion;
 
 		Orientation = JointQuaternion.Rotator();
 		

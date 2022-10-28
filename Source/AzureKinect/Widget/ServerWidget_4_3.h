@@ -9,6 +9,7 @@
 #include "MediaPlayer.h"
 #include "MediaTexture.h"
 #include "FileMediaSource.h"
+#include "/work/ue4_azure_kinect/Source/AzureKinect/Anim_UserDoll.h"
 #include "ServerWidget_4_3.generated.h"
 
 class AMainPlayerController;
@@ -94,4 +95,6 @@ public:
 public:
 	FString FilePath;
 	int64 FrameNum;
+	TSubclassOf<AActor> Doll;
+	UAnim_UserDoll* Anim_UserDoll;
 };

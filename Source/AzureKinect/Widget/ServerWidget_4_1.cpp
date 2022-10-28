@@ -67,43 +67,29 @@ void UServerWidget_4_1::NativeDestruct()
 
 void UServerWidget_4_1::CheckSkeleton()
 {
-	bool PoseCheck = true;
+	bool PoseCheck = false;
 
-	FRotator upperarm_l = Skel->GetBoneQuaternion(FName("upperarm_l")).Rotator();
-	FRotator lowerarm_l = Skel->GetBoneQuaternion(FName("lowerarm_l")).Rotator();
-	FRotator upperarm_r = Skel->GetBoneQuaternion(FName("upperarm_r")).Rotator();
-	FRotator lowerarm_r = Skel->GetBoneQuaternion(FName("lowerarm_r")).Rotator();
-	FRotator thigh_l = Skel->GetBoneQuaternion(FName("thigh_l")).Rotator();
-	FRotator calf_l = Skel->GetBoneQuaternion(FName("calf_l")).Rotator();
-	FRotator thigh_r = Skel->GetBoneQuaternion(FName("thigh_r")).Rotator();
-	FRotator calf_r = Skel->GetBoneQuaternion(FName("calf_r")).Rotator();
+	FRotator upperarm_l = Skel->GetBoneQuaternion(FName("upperarm_l"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator lowerarm_l = Skel->GetBoneQuaternion(FName("lowerarm_l"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator upperarm_r = Skel->GetBoneQuaternion(FName("upperarm_r"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator lowerarm_r = Skel->GetBoneQuaternion(FName("lowerarm_r"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator thigh_l = Skel->GetBoneQuaternion(FName("thigh_l"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator calf_l = Skel->GetBoneQuaternion(FName("calf_l"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator thigh_r = Skel->GetBoneQuaternion(FName("thigh_r"), EBoneSpaces::ComponentSpace).Rotator();
+	FRotator calf_r = Skel->GetBoneQuaternion(FName("calf_r"), EBoneSpaces::ComponentSpace).Rotator();
 	//포즈 체크
-	float tolerance = 30.0f;
-	if (FMath::IsNearlyEqual(upperarm_l.Pitch, -3.8f, tolerance) &&
-		FMath::IsNearlyEqual(upperarm_l.Yaw, 1.8f, tolerance) &&
-		FMath::IsNearlyEqual(upperarm_l.Roll, -95.0f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_l.Pitch, 22.0f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_l.Yaw, -10.0f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_l.Roll, -106.0f, tolerance) &&
-		FMath::IsNearlyEqual(upperarm_r.Pitch, 10.6f, tolerance) &&
-		FMath::IsNearlyEqual(upperarm_r.Yaw, -8.6f, tolerance) &&
-		FMath::IsNearlyEqual(upperarm_r.Roll, 86.0f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_r.Pitch, -1.1f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_r.Yaw, 1.6f, tolerance) &&
-		FMath::IsNearlyEqual(lowerarm_r.Roll, 90.3f, tolerance) &&
+	float tolerance = 50.0f;
+	if (//상체
+		upperarm_l.Equals(FRotator(-3.8f, 1.8f, -95.0f), tolerance) &&
+		lowerarm_l.Equals(FRotator(22.0f, -10.0f, -106.0f), tolerance) &&
+		upperarm_r.Equals(FRotator(10.6f, -8.6f, 86.0f), tolerance) &&
+		lowerarm_r.Equals(FRotator(-1.1f, 1.6f, 90.3f), tolerance) //&&
 
-		FMath::IsNearlyEqual(thigh_l.Pitch, 7.1f, tolerance) &&
-		FMath::IsNearlyEqual(thigh_l.Yaw, -89.1f, tolerance) &&
-		FMath::IsNearlyEqual(thigh_l.Roll, -73.5f, tolerance) &&
-		FMath::IsNearlyEqual(calf_l.Pitch, 15.3f, tolerance) &&
-		FMath::IsNearlyEqual(calf_l.Yaw, -87.5f, tolerance) &&
-		FMath::IsNearlyEqual(calf_l.Roll, -80.8f, tolerance) &&
-		FMath::IsNearlyEqual(thigh_r.Pitch, -7.9f, tolerance) &&
-		FMath::IsNearlyEqual(thigh_r.Yaw, 89.3f, tolerance) &&
-		FMath::IsNearlyEqual(thigh_r.Roll, 98.1f, tolerance) &&
-		FMath::IsNearlyEqual(calf_r.Pitch, -23.3f, tolerance) &&
-		FMath::IsNearlyEqual(calf_r.Yaw, 88.5f, tolerance) &&
-		FMath::IsNearlyEqual(calf_r.Roll, 98.0f, tolerance))
+		//하체
+		/*thigh_l.Equals(FRotator(7.1f, -89.1f, -73.5f), tolerance) &&
+		calf_l.Equals(FRotator(15.3f, -87.5f, -80.8f), tolerance) &&
+		thigh_r.Equals(FRotator(-7.9f, 89.3f, 98.1f), tolerance) &&
+		calf_r.Equals(FRotator(-23.3f, 88.5f, 98.0f), tolerance)*/)
 	{
 		PoseCheck = true;
 	}
@@ -116,15 +102,21 @@ void UServerWidget_4_1::CheckSkeleton()
 		Percent++;
 
 		if (MediaPlayer->IsPaused())
-		{
 			MediaPlayer->Play();
-		}
 	}
-	else if (!PoseCheck || MainGM->TrackedSkeleton_Num != 1 && !warning)
+	else if (!warning)
 	{
 		ClientMainPC->DeltaRotation = false;
 		warning = true;
 		UGameplayStatics::PlaySound2D(this, Warning_03);
+
+		if (MediaPlayer->IsPlaying())
+			MediaPlayer->Pause();
+	}
+	else
+	{
+		ClientMainPC->DeltaRotation = false;
+		warning = true;
 
 		if (MediaPlayer->IsPlaying())
 			MediaPlayer->Pause();

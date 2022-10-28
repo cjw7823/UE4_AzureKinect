@@ -26,7 +26,7 @@ public:
 
 	void SetReplayTransform(uint8 index, float pitch, float yaw, float roll);
 	void SetSkeletalMesh();
-	void SetMeshColor(float leftarm, float rightarm, float leftleg, float rightleg);
+	void SetMeshColor(int32 leftarm, int32 rightarm, int32 leftleg, int32 rightleg);
 
 	UPROPERTY(VisibleAnywhere, Category = Skeletal)
 		USkeletalMeshComponent* Body;

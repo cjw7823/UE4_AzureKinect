@@ -356,8 +356,13 @@ void Referee::CompareRotation()
 
 	GEngine->AddOnScreenDebugMessage(30, 100, FColor::Purple, FString::Printf(TEXT("Maxindex : %d"), Maxindex));
 
-	float tolerance1 = 40.f;
-	float tolerance2 = 60.f;
+	float tolerance1 = 50.f;
+	float tolerance2 = 70.f;
+	float tolerance3 = 90.f;
+	int32 Perfect = 100;
+	int32 Good = 80;
+	int32 Bad = 50;
+	int32 Fucking = 0;
 
 	for (int i = 0; i < Maxindex; i++)
 	{
@@ -380,144 +385,184 @@ void Referee::CompareRotation()
 		{
 			if (SHOULDER_LEFT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				SHOULDER_LEFT.Add(100);
+				TotalScore += Perfect;
+				SHOULDER_LEFT.Add(Perfect);
 			}
 			else if (SHOULDER_LEFT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				SHOULDER_LEFT.Add(50);
+				TotalScore += Good;
+				SHOULDER_LEFT.Add(Good);
+			}
+			else if (SHOULDER_LEFT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				SHOULDER_LEFT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				SHOULDER_LEFT.Add(25);
+				TotalScore += Fucking;
+				SHOULDER_LEFT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::SHOULDER_RIGHT)
 		{
 			if (SHOULDER_RIGHT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				SHOULDER_RIGHT.Add(100);
+				TotalScore += Perfect;
+				SHOULDER_RIGHT.Add(Perfect);
 			}
 			else if (SHOULDER_RIGHT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				SHOULDER_RIGHT.Add(50);
+				TotalScore += Good;
+				SHOULDER_RIGHT.Add(Good);
+			}
+			else if (SHOULDER_RIGHT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				SHOULDER_RIGHT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				SHOULDER_RIGHT.Add(25);
+				TotalScore += Fucking;
+				SHOULDER_RIGHT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::ELBOW_LEFT)
 		{
 			if (ELBOW_LEFT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				ELBOW_LEFT.Add(100);
+				TotalScore += Perfect;
+				ELBOW_LEFT.Add(Perfect);
 			}
 			else if (ELBOW_LEFT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				ELBOW_LEFT.Add(50);
+				TotalScore += Good;
+				ELBOW_LEFT.Add(Good);
+			}
+			else if (ELBOW_LEFT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				ELBOW_LEFT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				ELBOW_LEFT.Add(25);
+				TotalScore += Fucking;
+				ELBOW_LEFT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::ELBOW_RIGHT)
 		{
 			if (ELBOW_RIGHT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				ELBOW_RIGHT.Add(100);
+				TotalScore += Perfect;
+				ELBOW_RIGHT.Add(Perfect);
 			}
 			else if (ELBOW_RIGHT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				ELBOW_RIGHT.Add(50);
+				TotalScore += Good;
+				ELBOW_RIGHT.Add(Good);
+			}
+			else if (ELBOW_RIGHT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				ELBOW_RIGHT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				ELBOW_RIGHT.Add(25);
+				TotalScore += Fucking;
+				ELBOW_RIGHT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::HIP_LEFT)
 		{
 			if (HIP_LEFT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				HIP_LEFT.Add(100);
+				TotalScore += Perfect;
+				HIP_LEFT.Add(Perfect);
 			}
 			else if (HIP_LEFT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				HIP_LEFT.Add(50);
+				TotalScore += Good;
+				HIP_LEFT.Add(Good);
+			}
+			else if (HIP_LEFT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				HIP_LEFT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				HIP_LEFT.Add(25);
+				TotalScore += Fucking;
+				HIP_LEFT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::HIP_RIGHT)
 		{
 			if (HIP_RIGHT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				HIP_RIGHT.Add(100);
+				TotalScore += Perfect;
+				HIP_RIGHT.Add(Perfect);
 			}
 			else if (HIP_RIGHT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				HIP_RIGHT.Add(50);
+				TotalScore += Good;
+				HIP_RIGHT.Add(Good);
+			}
+			else if (HIP_RIGHT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				HIP_RIGHT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				HIP_RIGHT.Add(25);
+				TotalScore += Fucking;
+				HIP_RIGHT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::KNEE_LEFT)
 		{
 			if (KNEE_LEFT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				KNEE_LEFT.Add(100);
+				TotalScore += Perfect;
+				KNEE_LEFT.Add(Perfect);
 			}
 			else if (KNEE_LEFT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				KNEE_LEFT.Add(50);
+				TotalScore += Good;
+				KNEE_LEFT.Add(Good);
+			}
+			else if (KNEE_LEFT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				KNEE_LEFT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				KNEE_LEFT.Add(25);
+				TotalScore += Fucking;
+				KNEE_LEFT.Add(Fucking);
 			}
 		}
 		else if (temp == (int)ScoringJoints::KNEE_RIGHT)
 		{
 			if (KNEE_RIGHT_Equals(_MC, _Video, tolerance1))
 			{
-				TotalScore += 100;
-				KNEE_RIGHT.Add(100);
+				TotalScore += Perfect;
+				KNEE_RIGHT.Add(Perfect);
 			}
-			else if (KNEE_RIGHT_Equals(_MC, _Video, tolerance1))
+			else if (KNEE_RIGHT_Equals(_MC, _Video, tolerance2))
 			{
-				TotalScore += 50;
-				KNEE_RIGHT.Add(50);
+				TotalScore += Good;
+				KNEE_RIGHT.Add(Good);
+			}
+			else if (KNEE_RIGHT_Equals(_MC, _Video, tolerance3))
+			{
+				TotalScore += Bad;
+				KNEE_RIGHT.Add(Bad);
 			}
 			else
 			{
-				TotalScore += 25;
-				KNEE_RIGHT.Add(25);
+				TotalScore += Fucking;
+				KNEE_RIGHT.Add(Fucking);
 			}
 		}
 
@@ -526,7 +571,7 @@ void Referee::CompareRotation()
 	int32 temp = FMath::DivideAndRoundNearest(TotalScore, Maxindex);
 
 	TotalScore = (int32)temp;
-	
+
 }
 
 void Referee::AveragePartsScore()

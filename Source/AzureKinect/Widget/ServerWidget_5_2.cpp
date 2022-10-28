@@ -10,7 +10,7 @@
 #include "/work/ue4_azure_kinect/Source/AzureKinect/Widget/Referee.h"
 
 #define FILENAME "User_Data.json"
-#define INTERPORATION 30
+#define INTERPORATION 15
 
 UServerWidget_5_2::UServerWidget_5_2(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -171,7 +171,7 @@ void UServerWidget_5_2::SetSkeletalTransform(float InDeltaTime)
 {
 	const TSharedPtr<FJsonObject>* JsonObject;
 
-	int32 Correction = 45;
+	int32 Correction = 40;
 	int32 Frame = (double)FrameNum * CurPerDu;
 	//실수연산이기 때문에 몇개의 프레임은 씹힌다.
 	//GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, FString::Printf(TEXT("%d"), Frame));

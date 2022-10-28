@@ -105,9 +105,17 @@ void AReplay_Mannequin::SetSkeletalMesh()
 	}
 }
 
-void AReplay_Mannequin::SetMeshColor(float leftarm, float rightarm, float leftleg, float rightleg)
+void AReplay_Mannequin::SetMeshColor(int32 leftarm, int32 rightarm, int32 leftleg, int32 rightleg)
 {
-	//100 == 파랑, 50 == 노랑, 25 == 빨강
+	/*
+	int32 Perfect = 100;
+	int32 Good = 80;
+	int32 Bad = 50;
+	int32 Fucking = 25;
+	*/
+	int32 Blue = 90;
+	int32 Yellow = 60;
+
 	if (leftarm == -1)
 	{
 		Dyn_Leftarm->SetVectorParameterValue("Param", FLinearColor(1.f, 1.f, 1.f));
@@ -117,11 +125,11 @@ void AReplay_Mannequin::SetMeshColor(float leftarm, float rightarm, float leftle
 	}
 	else
 	{
-		if (leftarm >= 75)
+		if (leftarm >= Blue)
 		{
 			Dyn_Leftarm->SetVectorParameterValue("Param", FLinearColor(0.f, 0.f, 1.f));
 		}
-		else if (leftarm >= 30)
+		else if (leftarm >= Yellow)
 		{
 			Dyn_Leftarm->SetVectorParameterValue("Param", FLinearColor(1.f, 1.f, 0.f));
 		}
@@ -130,11 +138,11 @@ void AReplay_Mannequin::SetMeshColor(float leftarm, float rightarm, float leftle
 			Dyn_Leftarm->SetVectorParameterValue("Param", FLinearColor(1.f, 0.f, 0.f));
 		}
 
-		if (rightarm >= 75)
+		if (rightarm >= Blue)
 		{
 			Dyn_Rightarm->SetVectorParameterValue("Param", FLinearColor(0.f, 0.f, 1.f));
 		}
-		else if (rightarm >= 30)
+		else if (rightarm >= Yellow)
 		{
 			Dyn_Rightarm->SetVectorParameterValue("Param", FLinearColor(1.f, 1.f, 0.f));
 		}
@@ -143,11 +151,11 @@ void AReplay_Mannequin::SetMeshColor(float leftarm, float rightarm, float leftle
 			Dyn_Rightarm->SetVectorParameterValue("Param", FLinearColor(1.f, 0.f, 0.f));
 		}
 
-		if (leftleg >= 75)
+		if (leftleg >= Blue)
 		{
 			Dyn_Leftleg->SetVectorParameterValue("Param", FLinearColor(0.f, 0.f, 1.f));
 		}
-		else if (leftleg >= 30)
+		else if (leftleg >= Yellow)
 		{
 			Dyn_Leftleg->SetVectorParameterValue("Param", FLinearColor(1.f, 1.f, 0.f));
 		}
@@ -156,11 +164,11 @@ void AReplay_Mannequin::SetMeshColor(float leftarm, float rightarm, float leftle
 			Dyn_Leftleg->SetVectorParameterValue("Param", FLinearColor(1.f, 0.f, 0.f));
 		}
 
-		if (rightleg >= 75)
+		if (rightleg >= Blue)
 		{
 			Dyn_Rightleg->SetVectorParameterValue("Param", FLinearColor(0.f, 0.f, 1.f));
 		}
-		else if (rightleg >= 30)
+		else if (rightleg >= Yellow)
 		{
 			Dyn_Rightleg->SetVectorParameterValue("Param", FLinearColor(1.f, 1.f, 0.f));
 		}

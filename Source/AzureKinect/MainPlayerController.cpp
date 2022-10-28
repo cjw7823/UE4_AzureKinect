@@ -128,8 +128,9 @@ void AMainPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 
 void AMainPlayerController::FindSeek()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Blue, TEXT("FindSeek"));
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("FindSeek"));
 	UServerWidget_5_2* temp = Cast<UServerWidget_5_2>(ServerWidgets[ServerWidgetIndex::ServerWidget_5_2]);
+
 	temp->MediaPlayer->Play();
 }
 
@@ -434,30 +435,38 @@ void AMainPlayerController::NextCoachingVideo_Implementation()
 	}
 }
 
-void AMainPlayerController::SetMediaPlayerRate_Implementation(float rate)
+void AMainPlayerController::SetMediaPlayerRate_Implementation(int32 rate)
 {
 	UServerWidget_5_2* temp = Cast<UServerWidget_5_2>(ServerWidgets[ServerWidgetIndex::ServerWidget_5_2]);
 
 	//temp->MediaPlayer->OnSeekCompleted.AddDynamic(this, &AMainPlayerController::FindSeek);
 	temp->MediaPlayer->OnSeekCompleted.AddUnique(delegate);
-
-	if (rate == 1.5f)//기존의 빨리감기 버튼을 클릭하면 들어오는 값
+	
+	if (rate == 3)//기존의 빨리감기 버튼을 클릭하면 들어오는 값
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Blue, TEXT("fast"));
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("fast"));
 		temp->MediaPlayer->Pause();
 		int32 time = temp->MediaPlayer->GetTime().GetTotalSeconds() + 3.0;
-		temp->MediaPlayer->Seek(FTimespan::FromSeconds(time));
+		FTimespan Timespan = FTimespan::FromSeconds(time);
+		if (Timespan > temp->MediaPlayer->GetDuration())
+			Timespan = temp->MediaPlayer->GetDuration();
+
+		temp->MediaPlayer->Seek(Timespan);
 		//temp->MediaPlayer->Play();
 	}
-	else if (rate == 0.5f)//기존의 느리게감기 버튼을 클릭하면 들어오는 값
+	else if (rate == 2)//기존의 느리게감기 버튼을 클릭하면 들어오는 값
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Blue, TEXT("slow"));
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("slow"));
 		temp->MediaPlayer->Pause();
 		int32 time = temp->MediaPlayer->GetTime().GetTotalSeconds() - 3.0;
-		temp->MediaPlayer->Seek(FTimespan::FromSeconds(time));
+		FTimespan Timespan = FTimespan::FromSeconds(time);
+		if (Timespan < FTimespan::Zero())
+			Timespan = FTimespan::Zero();
+
+		temp->MediaPlayer->Seek(Timespan);
 		//temp->MediaPlayer->Play();
 	}
-	else
+	else//1.0or0.0
 	{
 		temp->MediaPlayer->SetRate(rate);
 	}
@@ -479,11 +488,11 @@ void AMainPlayerController::SeekMediaPlayer_Implementation(double SeekValue)
 	UServerWidget_5_2* temp = Cast<UServerWidget_5_2>(ServerWidgets[ServerWidgetIndex::ServerWidget_5_2]);
 	double time = SeekValue * (temp->Duration);
 
-	auto timespan = FTimespan::FromSeconds((int32)time);
+	FTimespan timespan = FTimespan::FromSeconds(time);
 
 	if (!(temp->MediaPlayer->Seek(timespan)))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, TEXT("Fail to Seed."));
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, TEXT("Fail to Seek."));
 	}
 }
 
