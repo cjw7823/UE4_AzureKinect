@@ -405,8 +405,8 @@ void UPictogram::SpawnPictogram()
 		TempImage->SetVisibility(ESlateVisibility::Visible);
 
 		UCanvasPanelSlot* imageSlot = Cast<UCanvasPanelSlot>(TempImage->Slot);
-		imageSlot->SetSize(FVector2D(110.0f, 120.0f));
-		imageSlot->SetPosition(FVector2D(600.0f, 20.0f));
+		imageSlot->SetSize(FVector2D(90.0f, 90.0f));
+		imageSlot->SetPosition(FVector2D(600.0f, 15.0f));
 
 		MovePictogram(TempImage);
 	}
@@ -427,7 +427,7 @@ void UPictogram::MovePictogram(UImage* image)
 {
 	UCanvasPanelSlot* imageSlot = Cast<UCanvasPanelSlot>(image->Slot);
 	double posi = imageSlot->GetPosition().X - 6.0;
-	imageSlot->SetPosition(FVector2D(posi, 0.0f));
+	imageSlot->SetPosition(FVector2D(posi, imageSlot->GetPosition().Y));
 
 
 	if (FMath::IsNearlyEqual(posi, 0.0) || posi < 0.0)

@@ -57,8 +57,8 @@ UServerWidget_3_3::UServerWidget_3_3(const FObjectInitializer& ObjectInitializer
 
 	Back_01 = Back01.Object;
 
-	static ConstructorHelpers::FClassFinder<AActor> ActorBGM(TEXT("Blueprint'/Game/Blueprints/BGM_01.BGM_01_C'"));
-	Audio01 = UGameplayStatics::GetActorOfClass(GetWorld(), ActorBGM.Class);
+	/*static ConstructorHelpers::FClassFinder<AActor> ActorBGM(TEXT("Blueprint'/Game/Blueprints/BGM_01.BGM_01_C'"));
+	Audio01 = UGameplayStatics::GetActorOfClass(GetWorld(), ActorBGM.Class);*/
 }
 
 void UServerWidget_3_3::NativeConstruct()
@@ -68,9 +68,11 @@ void UServerWidget_3_3::NativeConstruct()
 
 	auto anim = Cast<USkeletalMeshComponent>(GuideGirl->GetComponentByClass(USkeletalMeshComponent::StaticClass()))->GetAnimInstance();
 	auto temp = Cast<UGuideGirlAnimInstance>(anim);
-	temp->WidgetIndex = WidgetIndex::ServerWidget_3_3;
 	temp->ButtonIndex = (ButtonIndex)(uint8)Button;
+
 	temp->CoachingLevel = (CoachingLevel)(uint8)Level;
+
+	temp->WidgetIndex = WidgetIndex::ServerWidget_3_3;
 
 	//SetMediaPath_Background();
 
@@ -89,7 +91,7 @@ void UServerWidget_3_3::NativeDestruct()
 	/*if (Audio01 != NULL)
 		Audio01->Stop();*/
 
-	Cast<UAudioComponent>(Audio01->GetComponentByClass(UAudioComponent::StaticClass()))->Stop();
+	//Cast<UAudioComponent>(Audio01->GetComponentByClass(UAudioComponent::StaticClass()))->Stop();
 
 	//MediaPlayer->Close();
 

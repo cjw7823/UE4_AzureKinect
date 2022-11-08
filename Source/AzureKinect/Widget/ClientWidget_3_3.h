@@ -29,6 +29,7 @@ public:
 	void SetMediaPath_Background();
 
 	static SelectLevel Level;
+	static Select_Button Button;
 
 	UFUNCTION()
 		void OnClick_Button_Helper();

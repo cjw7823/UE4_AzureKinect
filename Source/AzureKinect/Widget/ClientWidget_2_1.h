@@ -32,6 +32,7 @@ public:
 	//최초 실행 판단을 위한 변수, 'EntryWidget'에서 true, this->OnClick_Button_Next()에서 false로 변경. 기본값=true
 	static bool isFirst;
 	static SelectLevel Level;
+	static Select_Button Button;
 
 	/*
 	다른 위젯에서 this를 생성할 때, 호출한 위젯의 정보를 저장 시켜줘야 한다.

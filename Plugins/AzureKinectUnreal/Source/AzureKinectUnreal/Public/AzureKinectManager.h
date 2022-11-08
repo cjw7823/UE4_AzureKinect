@@ -70,6 +70,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
 		static void SetBodyIndexTexture(UTextureRenderTarget2D* texture);
 
+	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
+		static void start_to_save();
+
+	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
+		static void end_to_save();
+
+	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
+		static int64 start_to_load(UTextureRenderTarget2D* texture);
+
+	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
+		static void end_to_load();
+
+	UFUNCTION(BlueprintCallable, Category = "Azure Kinect")
+		static void play_color_video(float time);
+
 private:
 	/** A singleton instance. */
 	static UAzureKinectManager *Instance;

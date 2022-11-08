@@ -63,6 +63,8 @@ void UServerWidget_4_3::NativeConstruct()
 
 void UServerWidget_4_3::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	UKismetSystemLibrary::K2_ClearTimerHandle(GetWorld(), timerhandle);
 
 	MediaPlayer->Close();

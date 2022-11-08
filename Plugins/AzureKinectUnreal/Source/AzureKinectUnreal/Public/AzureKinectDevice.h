@@ -10,7 +10,6 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "Delegates/IDelegateInstance.h"
 
-
 DECLARE_LOG_CATEGORY_EXTERN(AzureKinectDeviceLog, Log, All);
 
 /**
@@ -56,6 +55,9 @@ public:
 	UTextureRenderTarget2D* ColorTexture;
 	UTextureRenderTarget2D* InflaredTexture;
 	UTextureRenderTarget2D* BodyIndexTexture;
+	UTextureRenderTarget2D* MKVTexture;
+	k4a_device_configuration_t deviceConfig;
+	bool DoSaving;
 
 	EKinectRemap RemapMode;
 
@@ -68,14 +70,19 @@ public:
 
 
 	//--------------------------------------
-
+public:
+	void Start2Save();
+	void End2Save();
+	void SaveToColorVideo();
+	uint64_t Start2Load();
+	void End2Load();
+	void LoadToColorVideo(float time = -1.0f);
 
 private:
 	void CaptureColorImage();
 	void CaptureDepthImage();
 	void CaptureInflaredImage();
 	void CaptureBodyIndexImage(const k4abt::frame& BodyFrame);
-
 
 	/** A handle to the native k4a device that is used in starting and stopping camera sensors. */
 	k4a::device NativeKinectDevice;

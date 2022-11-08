@@ -62,6 +62,8 @@ void UServerWidget_5_2::NativeConstruct()
 
 void UServerWidget_5_2::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
 	if (Duration != 0 && is_Play)
 	{
 		auto CurTime = MediaPlayer->GetTime();
@@ -147,6 +149,7 @@ void UServerWidget_5_2::EndPlay()
 
 	ReplayMannequin->SetMeshColor(-1, -1, -1, -1);
 
+	Delta_Time = 0;
 }
 
 void UServerWidget_5_2::PlaybackSuspended()

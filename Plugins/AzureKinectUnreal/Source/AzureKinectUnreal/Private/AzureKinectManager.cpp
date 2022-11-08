@@ -161,3 +161,33 @@ void UAzureKinectManager::SetBodyIndexTexture(UTextureRenderTarget2D* texture)
 {
 	Instance->KinectDevicesById.FindRef(0)->BodyIndexTexture = texture;
 }
+
+void UAzureKinectManager::start_to_save()
+{
+	Instance->KinectDevicesById.FindRef(0)->Start2Save();
+}
+
+void UAzureKinectManager::end_to_save()
+{
+	Instance->KinectDevicesById.FindRef(0)->End2Save();
+}
+
+int64 UAzureKinectManager::start_to_load(UTextureRenderTarget2D* texture)
+{
+	uint64_t duration = 0;
+	duration = Instance->KinectDevicesById.FindRef(0)->Start2Load(); // playback opne
+	Instance->KinectDevicesById.FindRef(0)->MKVTexture = texture; // capture in playback
+
+	return duration;
+}
+
+void UAzureKinectManager::end_to_load()
+{
+	Instance->KinectDevicesById.FindRef(0)->MKVTexture = nullptr;
+	Instance->KinectDevicesById.FindRef(0)->End2Load();
+}
+
+void UAzureKinectManager::play_color_video(float time)
+{
+	Instance->KinectDevicesById.FindRef(0)->LoadToColorVideo(time);
+}

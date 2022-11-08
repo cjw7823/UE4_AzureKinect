@@ -21,11 +21,19 @@ UServerWidget_4_1::UServerWidget_4_1(const FObjectInitializer& ObjectInitializer
 	static ConstructorHelpers::FClassFinder<AActor> User(TEXT("Blueprint'/Game/Blueprints/BP_User_Doll.BP_User_Doll_C'"));
 
 	UserDoll = UGameplayStatics::GetActorOfClass(GetWorld(), User.Class);
+
+	static ConstructorHelpers::FClassFinder<AActor> ActorBGM(TEXT("Blueprint'/Game/Blueprints/BGM_01.BGM_01_C'"));
+	BGM = UGameplayStatics::GetActorOfClass(GetWorld(), ActorBGM.Class);
 }
 
 
 void UServerWidget_4_1::NativeConstruct()
 {
+	auto BGMactor = Cast<UAudioComponent>(BGM->GetComponentByClass(UAudioComponent::StaticClass()));
+
+	if (BGMactor->IsPlaying())
+		BGMactor->Stop();
+
 	Skel = Cast<USkeletalMeshComponent>(UserDoll->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 
 	Image_Sequence->SetVisibility(ESlateVisibility::Collapsed);
@@ -59,8 +67,11 @@ void UServerWidget_4_1::NativeDestruct()
 
 	UKismetSystemLibrary::K2_ClearTimerHandle(GetWorld(), timerhandle);
 
-	if(!MediaPlayer->IsClosed())
-		MediaPlayer->Close();
+	if (IsValid(MediaPlayer))
+	{
+		if (!MediaPlayer->IsClosed())
+			MediaPlayer->Close();
+	}
 
 	this->ConditionalBeginDestroy();
 }

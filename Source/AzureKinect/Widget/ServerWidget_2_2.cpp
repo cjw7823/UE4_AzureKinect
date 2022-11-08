@@ -24,7 +24,10 @@ void UServerWidget_2_2::NativeConstruct()
 	Super::NativeConstruct();
 	//Audio01 = UGameplayStatics::SpawnSound2D(this, Back_04);
 
-	Cast<UAudioComponent>(BGM->GetComponentByClass(UAudioComponent::StaticClass()))->Play();
+	auto temp = Cast<UAudioComponent>(BGM->GetComponentByClass(UAudioComponent::StaticClass()));
+
+	if(!temp->IsPlaying())
+		temp->Play();
 
 	S_bar->SetVisibility(ESlateVisibility::Collapsed);
 
@@ -60,16 +63,16 @@ void UServerWidget_2_2::NativeConstruct()
 
 void UServerWidget_2_2::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	auto anim = Cast<USkeletalMeshComponent>(GuideGirl->GetComponentByClass(USkeletalMeshComponent::StaticClass()))->GetAnimInstance();
 	if (Cast<UGuideGirlAnimInstance>(anim)->AudioCom != NULL)
 	{
 		Cast<UGuideGirlAnimInstance>(anim)->AudioCom->Stop();
 	}
 
-	Super::NativeDestruct();
-
-	if (Audio01 != NULL)
-		Audio01->Stop();
+	/*if (Audio01 != NULL)
+		Audio01->Stop();*/
 
 	auto temp = Cast<AReplay_Mannequin>(UGameplayStatics::GetActorOfClass(GetWorld(), AReplay_Mannequin::StaticClass()));
 	temp->SetSkeletalMesh();

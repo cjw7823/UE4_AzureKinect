@@ -104,5 +104,8 @@ public:
 
 	UPROPERTY()
 		UAudioComponent* Audio04;
-	
+	UPROPERTY()
+		AActor* GuideGirl;
+	UPROPERTY()
+		AActor* BGM;
 };

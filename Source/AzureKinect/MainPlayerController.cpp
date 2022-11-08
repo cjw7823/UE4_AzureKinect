@@ -132,6 +132,7 @@ void AMainPlayerController::FindSeek()
 	UServerWidget_5_2* temp = Cast<UServerWidget_5_2>(ServerWidgets[ServerWidgetIndex::ServerWidget_5_2]);
 
 	temp->MediaPlayer->Play();
+	temp->is_play_bp = true;
 }
 
 void AMainPlayerController::SetMediaPath_Implementation(uint8 selectlevel, uint8 selcet_button)
@@ -446,29 +447,37 @@ void AMainPlayerController::SetMediaPlayerRate_Implementation(int32 rate)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("fast"));
 		temp->MediaPlayer->Pause();
+		temp->is_play_bp = false;
 		int32 time = temp->MediaPlayer->GetTime().GetTotalSeconds() + 3.0;
 		FTimespan Timespan = FTimespan::FromSeconds(time);
 		if (Timespan > temp->MediaPlayer->GetDuration())
 			Timespan = temp->MediaPlayer->GetDuration();
 
 		temp->MediaPlayer->Seek(Timespan);
+		temp->Delta_Time += 3.0;
 		//temp->MediaPlayer->Play();
 	}
 	else if (rate == 2)//기존의 느리게감기 버튼을 클릭하면 들어오는 값
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("slow"));
 		temp->MediaPlayer->Pause();
+		temp->is_play_bp = false;
 		int32 time = temp->MediaPlayer->GetTime().GetTotalSeconds() - 3.0;
 		FTimespan Timespan = FTimespan::FromSeconds(time);
 		if (Timespan < FTimespan::Zero())
 			Timespan = FTimespan::Zero();
 
 		temp->MediaPlayer->Seek(Timespan);
+		temp->Delta_Time -= 3.0;
 		//temp->MediaPlayer->Play();
 	}
 	else//1.0or0.0
 	{
 		temp->MediaPlayer->SetRate(rate);
+		if (rate == 1)
+			temp->is_play_bp = true;
+		else if (rate == 0)
+			temp->is_play_bp = false;
 	}
 
 

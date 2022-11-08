@@ -3,7 +3,13 @@
 
 #include "AzureKinectDevice.h"
 #include "Containers/Ticker.h"
+#include <k4arecord/record.hpp>
+#include <k4arecord/playback.hpp>
 #include "Engine/Engine.h"
+
+
+static k4a_record_t recording;
+static k4a_playback_t playback_handle = NULL;
 
 DEFINE_LOG_CATEGORY(AzureKinectDeviceLog);
 
@@ -17,6 +23,8 @@ AzureKinectDevice::AzureKinectDevice(int32 Id, int32 TimeOut, EKinectRemap remap
 	ColorTexture(nullptr),
 	InflaredTexture(nullptr),
 	BodyIndexTexture(nullptr),
+	MKVTexture(nullptr),
+	DoSaving(false),
 	RemapMode(remap),
 	NativeKinectDevice(nullptr),
 	DeviceId(Id),
@@ -43,7 +51,7 @@ bool AzureKinectDevice::Initialize(k4a_depth_mode_t DepthMode, k4a_color_resolut
 		NativeKinectDevice = k4a::device::open(DeviceId);
 
 		// Start the Camera and make sure the Depth Camera is Enabled
-		k4a_device_configuration_t deviceConfig = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
+		deviceConfig = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
 		deviceConfig.depth_mode = DepthMode;
 		deviceConfig.color_resolution = ColorMode;
 
@@ -210,25 +218,30 @@ void AzureKinectDevice::CaptureBodyTrackingFrame()
 		//렌더링 할 캡쳐 데이터는 MasterDevice에서만 추출한다.
 		if (DeviceId == 0)
 		{
+			if (DoSaving)
+			{
+				SaveToColorVideo();
+			}
 			if (ColorTexture)
 			{
 				CaptureColorImage();
 			}
-
 			if (DepthTexture)
 			{
 				CaptureDepthImage();
 			}
-
 			if (InflaredTexture)
 			{
 				CaptureInflaredImage();
 			}
-
 			if (BodyIndexTexture)
 			{
 				CaptureBodyIndexImage(bodyFrame);
 			}
+			/*if (MKVTexture)
+			{
+				LoadToColorVideo();
+			}*/
 		}
 	}
 	catch (k4a::error captureError)
@@ -290,6 +303,190 @@ void AzureKinectDevice::ToggleShowLogsAndOnScreenMsgs(bool ShouldShowLogs, bool 
 {
 	bShowAllLogs = ShouldShowLogs;
 	bShowOnScreenMsgs = ShouldShowOnScreenMsgs;
+}
+
+void AzureKinectDevice::Start2Save()
+{
+	FString path = FPaths::ProjectDir() + TEXT("UserData/") + TEXT("TestRecord.mkv");
+	//k4a_record_t recording;
+	
+	if (k4a_record_create(TCHAR_TO_ANSI(*path), NativeKinectDevice.handle(), deviceConfig, &recording) != K4A_RESULT_SUCCEEDED)
+	{
+		UE_LOG(LogTemp, Error, TEXT("k4a_record_create Fail"));
+	}
+
+	k4a_record_write_header(recording);
+
+	DoSaving = true;
+}
+
+void AzureKinectDevice::End2Save()
+{
+	DoSaving = false;
+
+	k4a_record_flush(recording);
+	k4a_record_close(recording);
+}
+
+void AzureKinectDevice::SaveToColorVideo()
+{
+	k4a_capture_t capture;
+	k4a_wait_result_t get_capture_result = k4a_device_get_capture(NativeKinectDevice.handle(), &capture, K4A_WAIT_INFINITE);
+	if (get_capture_result == K4A_WAIT_RESULT_SUCCEEDED)
+	{
+		// Write the capture to the built-in tracks
+		k4a_record_write_capture(recording, capture);
+
+		// Get the depth image from the capture so we can write a processed copy to our custom track.
+		k4a_image_t depth_image = k4a_capture_get_depth_image(capture);
+		if (depth_image)
+		{
+			// The YUY2 image format is the same stride as the 16-bit depth image, so we can modify it in-place.
+			uint8_t* depth_buffer = k4a_image_get_buffer(depth_image);
+			size_t depth_buffer_size = k4a_image_get_size(depth_image);
+			for (size_t i = 0; i < depth_buffer_size; i += 2)
+			{
+				// Convert the depth value (16-bit, in millimeters) to the YUY2 color format.
+				// The YUY2 format should be playable in video players such as VLC.
+				uint16_t depth = (uint16_t)(depth_buffer[i + 1] << 8 | depth_buffer[i]);
+				// Clamp the depth range to ~1 meter and scale it to fit in the Y channel of the image (8-bits).
+				if (depth > 0x3FF)
+				{
+					depth_buffer[i] = 0xFF;
+				}
+				else
+				{
+					depth_buffer[i] = (uint8_t)(depth >> 2);
+				}
+				// Set the U/V channel to 128 (i.e. grayscale).
+				depth_buffer[i + 1] = 128;
+			}
+
+			k4a_image_release(depth_image);
+		}
+
+		k4a_capture_release(capture);
+	}
+	else if (get_capture_result == K4A_WAIT_RESULT_TIMEOUT)
+	{
+		// TIMEOUT should never be returned when K4A_WAIT_INFINITE is set.
+		UE_LOG(LogTemp, Error, TEXT("k4a_device_get_capture() timed out!\n"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("k4a_device_get_capture() returned error: %d\n"), get_capture_result);
+	}
+}
+
+uint64_t AzureKinectDevice::Start2Load()
+{
+	uint64_t duration = 0;
+	FString path = FPaths::ProjectDir() + TEXT("UserData/") + TEXT("TestRecord.mkv");
+
+	if (k4a_playback_open(TCHAR_TO_ANSI(*path), &playback_handle) != K4A_RESULT_SUCCEEDED)
+	{
+		UE_LOG(LogTemp, Error, TEXT("k4a_playback_open Fail"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("k4a_playback_open"));
+		duration = k4a_playback_get_recording_length_usec(playback_handle);
+	}
+
+	return duration;
+}
+
+void AzureKinectDevice::End2Load()
+{
+	k4a_playback_close(playback_handle);
+	UE_LOG(LogTemp, Error, TEXT("k4a_playback_close"));
+}
+
+void AzureKinectDevice::LoadToColorVideo(float time)
+{
+	if (time == -1.0f) return;
+	if (playback_handle == NULL) return;
+
+	k4a_playback_seek_timestamp(playback_handle, time * 1000000, K4A_PLAYBACK_SEEK_BEGIN);
+
+	k4a_capture_t playback_capture = NULL;
+	k4a_capture_create(&playback_capture);
+	k4a_stream_result_t result = k4a_playback_get_next_capture(playback_handle, &playback_capture);
+
+	if (result == K4A_STREAM_RESULT_SUCCEEDED)
+	{
+		// Process capture here
+		int32 Width = 0, Height = 0;
+		uint8* SourceBuffer = NULL;
+
+		//k4a::image ColorCapture = k4a_capture_get_color_image(playback_capture);
+		k4a_image_t ColorCapture = k4a_capture_get_color_image(playback_capture);
+
+		//if (!ColorCapture.is_valid()) return;
+		if (ColorCapture == NULL) return;
+
+		Width = k4a_image_get_width_pixels(ColorCapture);
+		Height = k4a_image_get_height_pixels(ColorCapture);
+		if (Width == 0 || Height == 0) return;
+
+		SourceBuffer = k4a_image_get_buffer(ColorCapture);
+		if (SourceBuffer == NULL) return;
+
+		//ColorCapture.reset();
+		k4a_image_release(ColorCapture);
+
+		if (MKVTexture->GetSurfaceWidth() != Width || MKVTexture->GetSurfaceHeight() != Height)
+		{
+			MKVTexture->InitCustomFormat(Width, Height, EPixelFormat::PF_B8G8R8A8, false);
+			MKVTexture->RenderTargetFormat = ETextureRenderTargetFormat::RTF_RGBA8;
+			MKVTexture->UpdateResource();
+		}
+		else
+		{
+			TArray<uint8> SrcData;
+			SrcData.Reset(Width * Height * 4);
+			for (int hi = 0; hi < Height; hi++)
+			{
+				//여기
+				for (int wi = 0; wi < Width; wi++)
+				{
+					int index = hi * Width + wi;
+					uint16 R = SourceBuffer[index * 4];
+					uint16 G = SourceBuffer[index * 4 + 1];
+					uint16 B = SourceBuffer[index * 4 + 2];
+
+					SrcData.Push(R);
+					SrcData.Push(G);
+					SrcData.Push(B);
+					SrcData.Push(0xFF);
+				}
+			}
+
+			FTextureResource* TextureResource = MKVTexture->Resource;
+			auto Region = FUpdateTextureRegion2D(0, 0, 0, 0, Width, Height);
+			
+			ENQUEUE_RENDER_COMMAND(UpdateTextureData)(
+				[TextureResource, Region, SrcData](FRHICommandListImmediate& RHICmdList) {
+					FTexture2DRHIRef Texture2D = TextureResource->TextureRHI ? TextureResource->TextureRHI->GetTexture2D() : nullptr;
+					if (!Texture2D)
+					{
+						return;
+					}
+					RHIUpdateTexture2D(Texture2D, 0, Region, 4 * Region.Width, SrcData.GetData());
+				});
+		}
+
+		k4a_capture_release(playback_capture);
+	}
+	else if (result == K4A_STREAM_RESULT_EOF)
+	{
+		k4a_playback_seek_timestamp(playback_handle, 0, K4A_PLAYBACK_SEEK_BEGIN);
+		//UE_LOG(LogTemp, Error, TEXT("EOF"));
+	}
+	else if (result == K4A_STREAM_RESULT_FAILED)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to read entire recording"));
+	}
 }
 
 void AzureKinectDevice::CaptureColorImage()
@@ -357,7 +554,7 @@ void AzureKinectDevice::CaptureColorImage()
 
 		FTextureResource* TextureResource = ColorTexture->Resource;
 		auto Region = FUpdateTextureRegion2D(0, 0, 0, 0, Width, Height);
-
+		//저기
 		ENQUEUE_RENDER_COMMAND(UpdateTextureData)(
 			[TextureResource, Region, SourceBuffer](FRHICommandListImmediate& RHICmdList) {
 				FTexture2DRHIRef Texture2D = TextureResource->TextureRHI ? TextureResource->TextureRHI->GetTexture2D() : nullptr;
@@ -557,8 +754,8 @@ void AzureKinectDevice::CaptureBodyIndexImage(const k4abt::frame& BodyFrame)
 		for (int i = 0; i < Width * Height; i++)
 		{
 			SrcData.Push(S[i] > 0 ? 0x00 : 0xff);
-			SrcData.Push(S[i]);
-			SrcData.Push(S[i]);
+			SrcData.Push(0x00);
+			SrcData.Push(0x00);
 			SrcData.Push(S[i] > 0 ? 0x00 : 0xff);
 		}
 

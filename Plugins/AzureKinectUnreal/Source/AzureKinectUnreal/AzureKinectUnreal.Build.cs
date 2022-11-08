@@ -77,12 +77,14 @@ public class AzureKinectUnreal : ModuleRules
 			new string[]
 			{
 				Path.Combine(azureKinectSensorSDKPath, "amd64", "release", "lib", "k4a.lib"),
-				Path.Combine(azureKinectBodyTrackingSDKPath, "amd64", "lib", "k4abt.lib")
-			});
+				Path.Combine(azureKinectBodyTrackingSDKPath, "amd64", "lib", "k4abt.lib"),
+                Path.Combine(azureKinectSensorSDKPath, "amd64", "release", "lib", "k4arecord.lib"),
+            });
 
 		// Ensure that the DLLs are staged along with the executable
 		RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/k4a.dll");
 		RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/k4abt.dll");
-		RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/depthengine_2_0.dll");
+        RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/k4arecord.dll");
+        RuntimeDependencies.Add("$(PluginDir)/Binaries/Win64/depthengine_2_0.dll");
 	}
 }

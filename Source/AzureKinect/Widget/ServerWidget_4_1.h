@@ -81,4 +81,7 @@ public:
 
 	UPROPERTY()
 		USkeletalMeshComponent* Skel;
+
+	UPROPERTY()
+		AActor* BGM;
 };

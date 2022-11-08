@@ -5,11 +5,12 @@
 #include "MainPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-#define INITTIMER 30
+#define INITTIMER 180
 
 bool UClientWidget_2_1::isFirst = true;
 ServerWidgetIndex UClientWidget_2_1::Index = ServerWidgetIndex::ServerWidget_2_1;
 SelectLevel UClientWidget_2_1::Level = SelectLevel::Low;
+Select_Button UClientWidget_2_1::Button = Select_Button::None;
 
 
 UClientWidget_2_1::UClientWidget_2_1(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -161,7 +162,7 @@ void UClientWidget_2_1::OnClick_Button_Close()
 {
 	InitTimer = 0;
 	UGameplayStatics::PlaySound2D(this, Button_09);
-	MainPC->ShowServerWidget(Index, Level);
+	MainPC->ShowServerWidget(Index, Level, Button);
 
 	this->SetVisibility(ESlateVisibility::Collapsed);
 }

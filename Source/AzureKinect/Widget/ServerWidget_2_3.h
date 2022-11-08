@@ -62,4 +62,6 @@ public:
 
 	UPROPERTY()
 		UGuideGirlAnimInstance* GuideAnim;
+	UPROPERTY()
+		AActor* BGM;
 };

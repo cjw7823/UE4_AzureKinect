@@ -4,7 +4,7 @@
 #include "MainPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-#define INITTIMER 90
+#define INITTIMER 180
 
 UClientWidget_5_2::UClientWidget_5_2(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -137,6 +137,7 @@ void UClientWidget_5_2::OnClick_Button_Play()
 
 void UClientWidget_5_2::OnClick_Button_Fast()
 {
+	UE_LOG(LogTemp, Error, TEXT("helloC++"));
 	InitTimer = 0;
 	UGameplayStatics::PlaySound2D(this, Button_14);
 

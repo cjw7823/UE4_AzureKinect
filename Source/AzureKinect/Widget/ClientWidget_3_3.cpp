@@ -4,9 +4,10 @@
 #include "MainPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-#define INITTIMER 30
+#define INITTIMER 180
 
 SelectLevel UClientWidget_3_3::Level = SelectLevel::Low;
+Select_Button UClientWidget_3_3::Button = Select_Button::None;
 
 UClientWidget_3_3::UClientWidget_3_3(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -77,6 +78,8 @@ void UClientWidget_3_3::OnClick_Button_Helper()
 	UGameplayStatics::PlaySound2D(this, Button_09);
 
 	UClientWidget_2_1::Level = Level;
+	UClientWidget_2_1::Button = Button;
+
 	auto temp = CreateWidget(MainPC, MainPC->ClientWidgetClass[ClientWidgetIndex::ClientWidget_2_1]);
 	temp->AddToViewport();
 

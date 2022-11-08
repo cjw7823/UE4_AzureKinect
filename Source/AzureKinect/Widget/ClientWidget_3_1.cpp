@@ -4,7 +4,7 @@
 #include "MainPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-#define INITTIMER 30
+#define INITTIMER 180
 
 UClientWidget_3_1::UClientWidget_3_1(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

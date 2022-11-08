@@ -99,4 +99,10 @@ public:
 
 	UPROPERTY()
 		AActor* GuideGirl;
+
+	UPROPERTY(BlueprintReadWrite)
+		float Delta_Time;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool is_play_bp;
 };

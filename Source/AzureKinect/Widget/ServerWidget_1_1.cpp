@@ -34,6 +34,8 @@ void UServerWidget_1_1::NativeConstruct()
 
 void UServerWidget_1_1::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	if(Audio01 != NULL)
 		Audio01->Stop();
 	if (Audio02 != NULL)

@@ -12,12 +12,20 @@ UServerWidget_2_3::UServerWidget_2_3(const FObjectInitializer& ObjectInitializer
 	static ConstructorHelpers::FObjectFinder<USoundWave> Back01(TEXT("SoundWave'/Game/Sound/Widget/배경음_01.배경음_01'"));
 
 	Back_01 = Back01.Object;
+
+	static ConstructorHelpers::FClassFinder<AActor> ActorBGM(TEXT("Blueprint'/Game/Blueprints/BGM_01.BGM_01_C'"));
+	BGM = UGameplayStatics::GetActorOfClass(GetWorld(), ActorBGM.Class);
 }
 
 void UServerWidget_2_3::NativeConstruct()
 {
 	Super::NativeConstruct();
 	//Audio01 = UGameplayStatics::SpawnSound2D(this, Back_01);
+
+	auto temp = Cast<UAudioComponent>(BGM->GetComponentByClass(UAudioComponent::StaticClass()));
+
+	if (!temp->IsPlaying())
+		temp->Play();
 
 	auto anim = Cast<USkeletalMeshComponent>(GuideGirl->GetComponentByClass(USkeletalMeshComponent::StaticClass()))->GetAnimInstance();
 	GuideAnim = Cast<UGuideGirlAnimInstance>(anim);

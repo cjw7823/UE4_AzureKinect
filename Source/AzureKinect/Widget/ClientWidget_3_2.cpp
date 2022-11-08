@@ -4,7 +4,7 @@
 #include "MainPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-#define INITTIMER 30
+#define INITTIMER 180
 
 SelectLevel UClientWidget_3_2::Level = SelectLevel::Low;
 
@@ -210,6 +210,7 @@ void UClientWidget_3_2::OnClick_Button_1()
 	MainPC->ShowServerWidget(ServerWidgetIndex::ServerWidget_3_3, Level, Select_Button::Button_1);
 
 	UClientWidget_3_3::Level = Level;
+	UClientWidget_3_3::Button = Select_Button::Button_1;
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 	auto ClientWidget = CreateWidget<UClientWidget_3_3>(MainPC, MainPC->ClientWidgetClass[ServerWidgetIndex::ServerWidget_3_3]);
 
@@ -229,6 +230,7 @@ void UClientWidget_3_2::OnClick_Button_2()
 	MainPC->ShowServerWidget(ServerWidgetIndex::ServerWidget_3_3, Level, Select_Button::Button_2);
 
 	UClientWidget_3_3::Level = Level;
+	UClientWidget_3_3::Button = Select_Button::Button_2;
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 	auto ClientWidget = CreateWidget<UClientWidget_3_3>(MainPC, MainPC->ClientWidgetClass[ServerWidgetIndex::ServerWidget_3_3]);
 
@@ -248,6 +250,7 @@ void UClientWidget_3_2::OnClick_Button_3()
 	MainPC->ShowServerWidget(ServerWidgetIndex::ServerWidget_3_3, Level, Select_Button::Button_3);
 
 	UClientWidget_3_3::Level = Level;
+	UClientWidget_3_3::Button = Select_Button::Button_3;
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 	auto ClientWidget = CreateWidget<UClientWidget_3_3>(MainPC, MainPC->ClientWidgetClass[ServerWidgetIndex::ServerWidget_3_3]);
 
@@ -267,6 +270,7 @@ void UClientWidget_3_2::OnClick_Button_4()
 	MainPC->ShowServerWidget(ServerWidgetIndex::ServerWidget_3_3, Level, Select_Button::Button_4);
 
 	UClientWidget_3_3::Level = Level;
+	UClientWidget_3_3::Button = Select_Button::Button_4;
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 	auto ClientWidget = CreateWidget<UClientWidget_3_3>(MainPC, MainPC->ClientWidgetClass[ServerWidgetIndex::ServerWidget_3_3]);
 
@@ -286,6 +290,7 @@ void UClientWidget_3_2::OnClick_Button_5()
 	MainPC->ShowServerWidget(ServerWidgetIndex::ServerWidget_3_3, Level, Select_Button::Button_5);
 
 	UClientWidget_3_3::Level = Level;
+	UClientWidget_3_3::Button = Select_Button::Button_5;
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 	auto ClientWidget = CreateWidget<UClientWidget_3_3>(MainPC, MainPC->ClientWidgetClass[ServerWidgetIndex::ServerWidget_3_3]);
 

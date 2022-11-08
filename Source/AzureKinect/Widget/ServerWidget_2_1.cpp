@@ -33,13 +33,26 @@ UServerWidget_2_1::UServerWidget_2_1(const FObjectInitializer& ObjectInitializer
 	static ConstructorHelpers::FObjectFinder<USoundWave> Back04(TEXT("SoundWave'/Game/Sound/Widget/배경음_04.배경음_04'"));
 	
 	Back_04 = Back04.Object;
+
+	static ConstructorHelpers::FClassFinder<AActor> BP_AnimMannequin(TEXT("Blueprint'/Game/Blueprints/BP_GuideGirl.BP_GuideGirl_C'"));
+	GuideGirl = UGameplayStatics::GetActorOfClass(GetWorld(), BP_AnimMannequin.Class);
+
+	static ConstructorHelpers::FClassFinder<AActor> ActorBGM(TEXT("Blueprint'/Game/Blueprints/BGM_01.BGM_01_C'"));
+	BGM = UGameplayStatics::GetActorOfClass(GetWorld(), ActorBGM.Class);
 }
 
 void UServerWidget_2_1::NativeConstruct()
 {
+	auto anim = Cast<USkeletalMeshComponent>(GuideGirl->GetComponentByClass(USkeletalMeshComponent::StaticClass()))->GetAnimInstance();
+	
+	Cast<UGuideGirlAnimInstance>(anim)->WidgetIndex = WidgetIndex::ServerWidget_2_1;
+
 	loading = false;
 
-	Audio04 = UGameplayStatics::SpawnSound2D(this, Back_04);
+	auto temp = Cast<UAudioComponent>(BGM->GetComponentByClass(UAudioComponent::StaticClass()));
+
+	if (!temp->IsPlaying())
+		Audio04 = UGameplayStatics::SpawnSound2D(this, Back_04);
 
 	VideoPathes.AddUnique(FString(TEXT("./Movies/Widget/MANUAL_1.mp4")));
 	VideoPathes.AddUnique(FString(TEXT("./Movies/Widget/MANUAL_2.mp4")));
